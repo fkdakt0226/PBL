@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="index.css">
+    </head>
+    <body>
+        <table>
+            <tr>
+                <th>波形</th>
+                <td>
+                    <input type="radio" name="grp_option1" value="1" id="p_osc1" checked="checked"  onchange="play();"><label for="p_osc1">sine(サイン波)</label>
+                    <input type="radio" name="grp_option1" value="2" id="p_osc2" onchange="play();"><label for="p_osc2">square(矩形波)</label>
+                    <input type="radio" name="grp_option1" value="3" id="p_osc3" onchange="play();"><label for="p_osc3">sawtooth(のこぎり波)</label>
+                    <input type="radio" name="grp_option1" value="4" id="p_osc4" onchange="play();"><label for="p_osc4">triangle(三角波)</label>
+                </td>
+            </tr>
+            <tr>
+                <th>音量<br><span id="msg_vol">50%</span></th>
+                <td>
+                    <input type="range" id="range_vol" min="0" max="100" value="50" onchange="play();">
+                </td>
+            </tr>
+        </table>
+        <div>
+            <button type="button" class="start" onclick="play();"><b>再生</b></button>
+            <button type="button" class="stop" onclick="stop();"><b>停止</b></button>
+        </div>
+
+        <script>
+        // AudioContext
+        var audioCtx;
+        // オシレータ
+        var oscillator;
+        // ゲイン
+        var gain;
+
+        var firstflg = true;
+
+        function play(){
+
+        stop();
+
+        var range_vol = document.getElementById('range_vol').value;
+        document.getElementById('msg_vol').innerHTML = parseInt(range_vol,10)+'%';
+
+        try{
+            if(firstflg){
+            // AudioContextの生成
+            audioCtx =  new AudioContext();
+            firstflg = false;
+            }
+            // 波形
+            oscillator = audioCtx.createOscillator();
+            if (document.getElementById("p_osc1").checked)oscillator.type="sine";
+            if (document.getElementById("p_osc2").checked)oscillator.type="square";
+            if (document.getElementById("p_osc3").checked)oscillator.type="sawtooth";
+            if (document.getElementById("p_osc4").checked)oscillator.type="triangle";
+
+            // 周波数
+            oscillator.frequency.value = 20000;
+
+            // ゲイン(音量)
+            gain = audioCtx.createGain();
+            gain.gain.value = range_vol /100;
+
+            oscillator.connect(gain);
+            gain.connect(audioCtx.destination);
+            oscillator.start();
+        }catch(e){
+            alert(e);
+        }
+        }
+
+        function stop(){
+        if(oscillator){
+            oscillator.stop();
+
+            gain.disconnect();
+            oscillator.disconnect();
+        }
+        }
+        </script>
+    </body>
+</html>

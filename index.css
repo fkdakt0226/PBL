@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+#range_vol{
+    padding:0;
+    width: 100%;
+}
+button{
+    display: inline-block;
+    color: white;
+    font-size: 30px;
+    padding: 25% 20%;
+    margin-top: 20px;
+}
+div{
+    text-align: center;
+}
+.start{
+    background-color: blue;
+}
+.stop{
+    background-color: red;
+}
